@@ -107,8 +107,15 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
             font-size: clamp(0.75rem, 2vw, 0.875rem);
+            table-layout: fixed;
+        }
+
+        @media (min-width: 769px) {
+            table {
+                min-width: 600px;
+                table-layout: auto;
+            }
         }
 
         thead {
@@ -247,7 +254,7 @@
             }
 
             .container {
-                padding: 15px;
+                padding: 12px;
                 border-radius: 4px;
             }
 
@@ -260,43 +267,118 @@
             }
 
             .stats {
-                padding: 12px;
+                padding: 10px;
                 margin-bottom: 10px;
+                font-size: 0.8rem;
+            }
+
+            .stat-row {
+                margin: 2px 0;
+            }
+
+            .table-wrapper {
+                margin: 0 -12px;
+                padding: 0 12px;
+                max-height: calc(100vh - 280px);
             }
 
             table {
                 font-size: 0.75rem;
+                min-width: 100%;
+            }
+
+            th, td {
+                padding: 10px 6px;
+            }
+
+            th:first-child, td:first-child {
+                padding: 10px 4px;
+                width: 35px;
+            }
+
+            /* Optimize column widths for mobile */
+            th:nth-child(2), td:nth-child(2) { /* Date */
+                width: 70px;
+            }
+
+            th:nth-child(4), td:nth-child(4) { /* Submitter */
+                width: 40px;
+            }
+
+            .rating-col, .sum-col {
+                width: 38px;
+            }
+
+            .song-title {
+                font-size: 0.85rem;
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
+
+            .badge, .warning-badge {
+                font-size: 0.55em;
+                padding: 1px 3px;
+                margin-left: 2px;
+            }
+
+            select, button {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            .table-wrapper {
+                margin: 0 -8px;
+                padding: 0 8px;
+            }
+
+            table {
+                font-size: 0.7rem;
             }
 
             th, td {
                 padding: 8px 4px;
             }
 
-            /* Make ID column smaller on mobile */
             th:first-child, td:first-child {
-                padding: 8px 2px;
+                padding: 8px 3px;
+                width: 30px;
             }
 
-            .badge, .warning-badge {
-                font-size: 0.6em;
-                padding: 1px 4px;
-            }
-        }
-
-        /* Extra small screens */
-        @media (max-width: 480px) {
-            .table-wrapper {
-                margin: 0 -15px;
-                padding: 0 15px;
+            th:nth-child(2), td:nth-child(2) { /* Date */
+                width: 65px;
+                font-size: 0.65rem;
             }
 
-            table {
-                font-size: 0.7rem;
-                min-width: 550px;
+            th:nth-child(4), td:nth-child(4) { /* Submitter */
+                width: 35px;
             }
 
-            th, td {
-                padding: 6px 3px;
+            .rating-col, .sum-col {
+                width: 32px;
+            }
+
+            .song-title {
+                font-size: 0.75rem;
+            }
+
+            .stats {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+
+            select, button {
+                padding: 9px;
+                font-size: 14px;
             }
         }
     </style>
@@ -639,6 +721,14 @@
             document.getElementById('resetBtn').addEventListener('click', () => {
                 document.getElementById('submitterFilter').value = 'all';
                 document.getElementById('perfectFilter').value = 'all';
+                currentSort = { column: 'id', direction: 'desc' };
+                
+                // Update sort indicators
+                document.querySelectorAll('.sortable').forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+                document.querySelector('[data-sort="id"]').classList.add('sort-desc');
+                
                 applyFiltersAndSort();
             });
 
@@ -647,9 +737,14 @@
                 th.addEventListener('click', () => {
                     const column = th.dataset.sort;
                     
-                    // Toggle direction if same column, otherwise default to desc
+                    // Cycle through: desc → asc → reset to default (id desc)
                     if (currentSort.column === column) {
-                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                        if (currentSort.direction === 'desc') {
+                            currentSort.direction = 'asc';
+                        } else {
+                            // Reset to default sort
+                            currentSort = { column: 'id', direction: 'desc' };
+                        }
                     } else {
                         currentSort.column = column;
                         currentSort.direction = 'desc';
@@ -659,7 +754,11 @@
                     document.querySelectorAll('.sortable').forEach(header => {
                         header.classList.remove('sort-asc', 'sort-desc');
                     });
-                    th.classList.add(`sort-${currentSort.direction}`);
+                    
+                    const activeHeader = document.querySelector(`[data-sort="${currentSort.column}"]`);
+                    if (activeHeader) {
+                        activeHeader.classList.add(`sort-${currentSort.direction}`);
+                    }
 
                     applyFiltersAndSort();
                 });
