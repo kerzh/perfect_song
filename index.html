@@ -289,25 +289,25 @@
             }
 
             th, td {
-                padding: 10px 6px;
+                padding: 10px 5px;
             }
 
             th:first-child, td:first-child {
-                padding: 10px 4px;
-                width: 35px;
+                padding: 10px 3px;
+                width: 32px;
             }
 
             /* Optimize column widths for mobile */
             th:nth-child(2), td:nth-child(2) { /* Date */
-                width: 70px;
+                width: 60px;
             }
 
             th:nth-child(4), td:nth-child(4) { /* Submitter */
-                width: 40px;
+                width: 36px;
             }
 
             .rating-col, .sum-col {
-                width: 38px;
+                width: 35px;
             }
 
             .song-title {
@@ -356,16 +356,17 @@
             }
 
             th:nth-child(2), td:nth-child(2) { /* Date */
-                width: 65px;
-                font-size: 0.65rem;
+                width: 58px;
+                font-size: 0.68rem;
             }
 
             th:nth-child(4), td:nth-child(4) { /* Submitter */
-                width: 35px;
+                width: 32px;
             }
 
             .rating-col, .sum-col {
-                width: 32px;
+                width: 30px;
+                font-size: 0.68rem;
             }
 
             .song-title {
@@ -609,6 +610,19 @@
             });
         }
 
+        // Format date for mobile (DD/MM/YY on mobile, DD/MM/YYYY on desktop)
+        function formatDate(dateStr) {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return dateStr;
+            
+            // Convert DD/MM/YYYY to DD/MM/YY
+            const parts = dateStr.split('/');
+            if (parts.length === 3 && parts[2].length === 4) {
+                return `${parts[0]}/${parts[1]}/${parts[2].slice(-2)}`;
+            }
+            return dateStr;
+        }
+
         // Render table
         function renderTable(songs) {
             const tbody = document.getElementById('songsBody');
@@ -650,7 +664,7 @@
 
             row.innerHTML = `
                 <td>${song.id}</td>
-                <td>${song.date}</td>
+                <td>${formatDate(song.date)}</td>
                 <td class="song-title-cell">${titleDisplay}${duplicateWarning}</td>
                 <td class="submitter">${song.submitter}</td>
                 <td class="rating">${formatRating(song.E)}</td>
@@ -763,6 +777,15 @@
 
                     applyFiltersAndSort();
                 });
+            });
+
+            // Re-render on window resize to update date format
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    applyFiltersAndSort();
+                }, 250);
             });
         });
     </script>
