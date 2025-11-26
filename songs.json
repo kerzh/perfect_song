@@ -100,7 +100,6 @@
     {"id": 98, "date": "23/11/2025", "link": "https://youtu.be/xIU4A_TiGeo", "submitter": "M", "E": 5, "M": 10, "P": 6.5, "sum": 21.5, "both_8_plus": false},
     {"id": 99, "date": "24/11/2025", "link": "https://youtu.be/4NRXx6U8ABQ", "submitter": "E", "E": 10, "M": 5.5, "P": 7, "sum": 22.5, "both_8_plus": false},
     {"id": 100, "date": "25/11/2025", "link": "https://youtu.be/ZDoFmHPEcso", "submitter": "P", "E": 5, "M": 6.5, "P": 10, "sum": 21.5, "both_8_plus": false},
-    {"id": 101, "date": "26/11/2025", "link": "https://youtu.be/no1vf854aUc", "submitter": "M", "E": 7.5, "M": 10, "P": 5, "sum": 22.5, "both_8_plus": false},
-    {"id": 102, "date": "27/11/2025", "link": "https://youtu.be/tWSDdCAzBJg", "submitter": "E", "E": 10, "M": 3, "P": 5, "sum": 18, "both_8_plus": false}
+    {"id": 101, "date": "26/11/2025", "link": "https://youtu.be/no1vf854aUc", "submitter": "M", "E": 7.5, "M": 10, "P": 5, "sum": 22.5, "both_8_plus": false}
   ]
 }
