@@ -50,7 +50,7 @@
     {"id": 48, "date": "20/10/2025", "link": "https://youtu.be/AWiBIrPMEWk", "submitter": "E", "E": 10, "M": 4.5, "P": 8, "sum": 22.5, "both_8_plus": false},
     {"id": 49, "date": "21/10/2025", "link": "https://youtu.be/LCJblaUkkfc", "submitter": "P", "E": 7.9, "M": 7.5, "P": 10, "sum": 25.4, "both_8_plus": false},
     {"id": 50, "date": "22/10/2025", "link": "https://youtu.be/tz-QNii79lI", "submitter": "M", "E": 5.5, "M": 10, "P": 5, "sum": 20.5, "both_8_plus": false},
-    {"id": 51, "date": "22/10/2025", "link": "https://youtu.be/UWg5ugyMjIc", "submitter": "E", "E": 10, "M": 6, "P": 5, "sum": 21, "both_8_plus": false},
+    {"id": 51, "date": "22/10/2025", "link": "https://youtu.be/UWg5ugyMjIc", "submitter": "E", "E": 10, "M": 7, "P": null, "sum": 14, "both_8_plus": false},
     {"id": 52, "date": "23/10/2025", "link": "https://youtu.be/WIF4_Sm-rgQ", "submitter": "P", "E": 8, "M": 9.25, "P": 10, "sum": 27.25, "both_8_plus": true},
     {"id": 53, "date": "27/10/2025", "link": "https://youtu.be/_s4UwMZM8nQ", "submitter": "M", "E": 8, "M": 10, "P": 8.5, "sum": 26.5, "both_8_plus": true},
     {"id": 54, "date": "27/10/2025", "link": "https://youtu.be/0J2QdDbelmY", "submitter": "E", "E": 10, "M": 8, "P": 8, "sum": 26, "both_8_plus": true},
