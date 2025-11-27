@@ -492,7 +492,7 @@
       "link": "https://youtu.be/Hc7H5sdT848",
       "submitter": "P",
       "E": 6,
-      "M": 6,
+      "M": 5,
       "P": 10
     },
     {
@@ -502,7 +502,7 @@
       "submitter": "M",
       "E": 5,
       "M": 10,
-      "P": 6
+      "P": 4
     },
     {
       "id": 57,
@@ -510,8 +510,8 @@
       "link": "https://youtu.be/2WN0T-Ee3q4",
       "submitter": "E",
       "E": 10,
-      "M": 4,
-      "P": 2
+      "M": 2,
+      "P": 0.35
     },
     {
       "id": 58,
@@ -519,7 +519,7 @@
       "link": "https://youtu.be/TnpwuRlXbhk",
       "submitter": "P",
       "E": 3,
-      "M": 4,
+      "M": 8,
       "P": 10
     },
     {
@@ -527,9 +527,9 @@
       "date": "30/10/2025",
       "link": "https://youtu.be/SqRDTZwhNAs",
       "submitter": "M",
-      "E": 4,
+      "E": 1,
       "M": 10,
-      "P": 2
+      "P": 1
     },
     {
       "id": 60,
@@ -537,8 +537,8 @@
       "link": "https://youtu.be/X2LTL8KgKv8",
       "submitter": "E",
       "E": 10,
-      "M": 6,
-      "P": 6
+      "M": 6.5,
+      "P": 9
     },
     {
       "id": 61,
@@ -592,7 +592,7 @@
       "submitter": "E",
       "E": 10,
       "M": 5,
-      "P": 5
+      "P": 6.5
     },
     {
       "id": 67,
@@ -610,7 +610,7 @@
       "submitter": "M",
       "E": 3,
       "M": 10,
-      "P": 3
+      "P": 1
     },
     {
       "id": 69,
@@ -618,15 +618,15 @@
       "link": "https://youtu.be/-0RQU0LyJqg",
       "submitter": "E",
       "E": 10,
-      "M": 5,
-      "P": 6
+      "M": 3,
+      "P": 1
     },
     {
       "id": 70,
       "date": "05/11/2025",
       "link": "https://youtu.be/ZdDHi5SSIlM",
       "submitter": "P",
-      "E": null,
+      "E": 2,
       "M": 5,
       "P": 10
     },
