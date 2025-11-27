@@ -448,6 +448,22 @@
         let currentSort = { column: 'id', direction: 'desc' };
         const titleCache = {};
 
+        // Calculate sum of ratings
+        function calculateSum(song) {
+            const ratings = [song.E, song.M, song.P].filter(r => r !== null && r !== undefined);
+            return ratings.reduce((sum, rating) => sum + rating, 0);
+        }
+
+        // Check if song has both M and P ratings >= 8
+        function isBoth8Plus(song) {
+            const E = song.E;
+            const M = song.M;
+            const P = song.P;
+            return E !== null && E !== undefined && E >= 8 && 
+                   M !== null && M !== undefined && M >= 8 && 
+                   P !== null && P !== undefined && P >= 8;
+        }
+
         // Extract YouTube video ID from URL
         function extractVideoId(url) {
             const patterns = [
@@ -535,20 +551,20 @@
 
         // Calculate statistics
         function updateStatistics(songs, visibleSongs) {
-            const perfectCount = songs.filter(s => s.both_8_plus).length;
+            const perfectCount = songs.filter(s => isBoth8Plus(s)).length;
             const perfectPercent = ((perfectCount / songs.length) * 100).toFixed(1);
             
             // Calculate averages (excluding null values)
             const avgE = calculateAverage(songs.map(s => s.E));
             const avgM = calculateAverage(songs.map(s => s.M));
             const avgP = calculateAverage(songs.map(s => s.P));
-            const avgSum = calculateAverage(songs.map(s => s.sum));
+            const avgSum = calculateAverage(songs.map(s => calculateSum(s)));
             
             document.getElementById('totalSongs').textContent = songs.length;
             document.getElementById('visibleSongs').textContent = visibleSongs.length;
             document.getElementById('perfectSongs').textContent = perfectCount;
             document.getElementById('perfectPercent').textContent = perfectPercent;
-            document.getElementById('highestScore').textContent = Math.max(...songs.map(s => s.sum));
+            document.getElementById('highestScore').textContent = Math.max(...songs.map(s => calculateSum(s)));
             document.getElementById('avgE').textContent = avgE;
             document.getElementById('avgM').textContent = avgM;
             document.getElementById('avgP').textContent = avgP;
@@ -567,6 +583,12 @@
             return [...songs].sort((a, b) => {
                 let valA = a[column];
                 let valB = b[column];
+
+                // Handle sum sorting (calculated dynamically)
+                if (column === 'sum') {
+                    valA = calculateSum(a);
+                    valB = calculateSum(b);
+                }
 
                 // Handle date sorting
                 if (column === 'date') {
@@ -599,10 +621,10 @@
                 }
 
                 // Perfect filter
-                if (perfectFilter === 'perfect' && !song.both_8_plus) {
+                if (perfectFilter === 'perfect' && !isBoth8Plus(song)) {
                     return false;
                 }
-                if (perfectFilter === 'non-perfect' && song.both_8_plus) {
+                if (perfectFilter === 'non-perfect' && isBoth8Plus(song)) {
                     return false;
                 }
 
@@ -644,7 +666,7 @@
             const row = document.createElement('tr');
             row.dataset.songId = song.id;
             
-            if (song.both_8_plus) {
+            if (isBoth8Plus(song)) {
                 row.classList.add('highlight');
             }
 
@@ -670,7 +692,7 @@
                 <td class="rating">${formatRating(song.E)}</td>
                 <td class="rating">${formatRating(song.M)}</td>
                 <td class="rating">${formatRating(song.P)}</td>
-                <td class="sum">${song.sum}</td>
+                <td class="sum">${calculateSum(song)}</td>
             `;
 
             return row;
