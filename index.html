@@ -36,48 +36,6 @@
             display: none;
         }
 
-        .controls {
-            margin-bottom: 15px;
-            display: grid;
-            gap: 10px;
-            grid-template-columns: 1fr;
-        }
-
-        .filter-row {
-            display: grid;
-            gap: 10px;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        }
-
-        select, button {
-            padding: 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            font-size: 16px;
-            background: white;
-            cursor: pointer;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #0d6efd;
-        }
-
-        button {
-            background: #0d6efd;
-            color: white;
-            border: none;
-            font-weight: 500;
-        }
-
-        button:hover {
-            background: #0b5ed7;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
         .stats {
             margin-bottom: 15px;
             padding: 15px;
@@ -223,18 +181,22 @@
         }
 
         thead {
-            background: #212529;
-            color: white;
+            background: #f8f9fa;
+            color: #212529;
             position: sticky;
             top: 0;
             z-index: 10;
+            border-bottom: 2px solid #dee2e6;
         }
 
         th {
             padding: 12px 8px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
             white-space: nowrap;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         th.rating-col, th.sum-col, th.submitter-col {
@@ -247,7 +209,7 @@
         }
 
         .sortable:hover {
-            background: #000;
+            background: #e9ecef;
         }
 
         .sort-indicator {
@@ -480,33 +442,11 @@
                 font-size: 0.75rem;
                 padding: 8px;
             }
-
-            select, button {
-                padding: 9px;
-                font-size: 14px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="controls">
-            <div class="filter-row">
-                <select id="submitterFilter">
-                    <option value="all">All Submitters</option>
-                    <option value="E">E</option>
-                    <option value="M">M</option>
-                    <option value="P">P</option>
-                </select>
-                <select id="perfectFilter">
-                    <option value="all">All Songs</option>
-                    <option value="perfect">Perfect Songs Only</option>
-                    <option value="non-perfect">Non-Perfect</option>
-                </select>
-                <button id="resetBtn">Reset</button>
-            </div>
-        </div>
-        
         <div class="stats">
             <div class="stat-row">
                 Total songs: <strong id="totalSongs">0</strong> | 
@@ -577,14 +517,14 @@
             <table id="songsTable" style="display: none;">
             <thead>
                 <tr>
-                    <th class="sortable" data-sort="id"># <span class="sort-indicator">↕</span></th>
-                    <th class="sortable date-col" data-sort="date">Date <span class="sort-indicator">↕</span></th>
-                    <th class="sortable" data-sort="title">Song <span class="sort-indicator">↕</span></th>
-                    <th class="sortable submitter-col" data-sort="submitter">Sub <span class="sort-indicator">↕</span></th>
-                    <th class="sortable rating-col" data-sort="E">E <span class="sort-indicator">↕</span></th>
-                    <th class="sortable rating-col" data-sort="M">M <span class="sort-indicator">↕</span></th>
-                    <th class="sortable rating-col" data-sort="P">P <span class="sort-indicator">↕</span></th>
-                    <th class="sortable sum-col" data-sort="sum">Sum <span class="sort-indicator">↕</span></th>
+                    <th class="sortable" data-sort="id">#</th>
+                    <th class="sortable date-col" data-sort="date">Date</th>
+                    <th class="sortable" data-sort="title">Song</th>
+                    <th class="sortable submitter-col" data-sort="submitter">Sub</th>
+                    <th class="sortable rating-col" data-sort="E">E</th>
+                    <th class="sortable rating-col" data-sort="M">M</th>
+                    <th class="sortable rating-col" data-sort="P">P</th>
+                    <th class="sortable sum-col" data-sort="sum">Sum</th>
                 </tr>
             </thead>
             <tbody id="songsBody">
@@ -824,26 +764,6 @@
             });
         }
 
-        // Filter songs
-        function filterSongs(songs, submitter, perfectFilter) {
-            return songs.filter(song => {
-                // Submitter filter
-                if (submitter !== 'all' && song.submitter !== submitter) {
-                    return false;
-                }
-
-                // Perfect filter
-                if (perfectFilter === 'perfect' && !isBoth8Plus(song)) {
-                    return false;
-                }
-                if (perfectFilter === 'non-perfect' && isBoth8Plus(song)) {
-                    return false;
-                }
-
-                return true;
-            });
-        }
-
         // Format date for mobile (DD/MM/YY on mobile, DD/MM/YYYY on desktop)
         function formatDate(dateStr) {
             const isMobile = window.innerWidth <= 768;
@@ -867,11 +787,7 @@
                 tbody.appendChild(row);
             });
 
-            // Update visible songs count
-            const submitter = document.getElementById('submitterFilter').value;
-            const perfectFilter = document.getElementById('perfectFilter').value;
-            const filtered = filterSongs(allSongs, submitter, perfectFilter);
-            updateStatistics(allSongs, filtered);
+            updateStatistics(allSongs, songs);
         }
 
         function createSongRow(song) {
@@ -910,15 +826,10 @@
             return row;
         }
 
-        // Apply filters and sorting
-        function applyFiltersAndSort() {
-            const submitter = document.getElementById('submitterFilter').value;
-            const perfectFilter = document.getElementById('perfectFilter').value;
-
-            let filtered = filterSongs(songsWithTitles, submitter, perfectFilter);
-            filtered = sortSongs(filtered, currentSort.column, currentSort.direction);
-            
-            renderTable(filtered);
+        // Apply sorting
+        function applySort() {
+            const sorted = sortSongs(songsWithTitles, currentSort.column, currentSort.direction);
+            renderTable(sorted);
         }
 
         // Load and display songs
@@ -962,25 +873,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSongs();
 
-            // Filter selects
-            document.getElementById('submitterFilter').addEventListener('change', applyFiltersAndSort);
-            document.getElementById('perfectFilter').addEventListener('change', applyFiltersAndSort);
-
-            // Reset button
-            document.getElementById('resetBtn').addEventListener('click', () => {
-                document.getElementById('submitterFilter').value = 'all';
-                document.getElementById('perfectFilter').value = 'all';
-                currentSort = { column: 'id', direction: 'desc' };
-                
-                // Update sort indicators
-                document.querySelectorAll('.sortable').forEach(header => {
-                    header.classList.remove('sort-asc', 'sort-desc');
-                });
-                document.querySelector('[data-sort="id"]').classList.add('sort-desc');
-                
-                applyFiltersAndSort();
-            });
-
             // Sortable columns
             document.querySelectorAll('.sortable').forEach(th => {
                 th.addEventListener('click', () => {
@@ -1009,7 +901,7 @@
                         activeHeader.classList.add(`sort-${currentSort.direction}`);
                     }
 
-                    applyFiltersAndSort();
+                    applySort();
                 });
             });
 
@@ -1018,7 +910,7 @@
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
-                    applyFiltersAndSort();
+                    applySort();
                 }, 250);
             });
         });
