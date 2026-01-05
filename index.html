@@ -96,6 +96,109 @@
             font-weight: 600;
         }
 
+        .overlap-section {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .overlap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .overlap-header h3 {
+            font-size: 1rem;
+            color: #212529;
+            margin: 0;
+        }
+
+        .overlap-toggle {
+            font-size: 1.2rem;
+            color: #0d6efd;
+            transition: transform 0.3s;
+        }
+
+        .overlap-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .overlap-content {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .overlap-content.hidden {
+            display: none;
+        }
+
+        .overlap-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #0d6efd;
+        }
+
+        .overlap-card h4 {
+            font-size: 0.9rem;
+            margin: 0 0 10px 0;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .overlap-card .names {
+            font-weight: 600;
+            color: #0d6efd;
+        }
+
+        .overlap-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 0.85rem;
+        }
+
+        .overlap-stat .label {
+            color: #6c757d;
+        }
+
+        .overlap-stat .value {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .overlap-percentage {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .overlap-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .overlap-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+            transition: width 0.5s ease;
+        }
+
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -416,6 +519,54 @@
                 Avg sum: <strong id="avgSum">0</strong>
             </div>
         </div>
+
+        <div class="overlap-section">
+            <div class="overlap-header" onclick="toggleOverlap()">
+                <h3>Music Taste Overlap</h3>
+                <span class="overlap-toggle" id="overlapToggle">▼</span>
+            </div>
+            <div class="overlap-content" id="overlapContent">
+                <div class="overlap-card">
+                    <h4><span class="names">E & M</span></h4>
+                    <div class="overlap-percentage" id="overlapEM">0%</div>
+                    <div class="overlap-bar"><div class="overlap-bar-fill" id="barEM"></div></div>
+                    <div class="overlap-stat">
+                        <span class="label">Songs both rated 8+:</span>
+                        <span class="value" id="countEM">0</span>
+                    </div>
+                    <div class="overlap-stat">
+                        <span class="label">Total eligible songs:</span>
+                        <span class="value" id="totalEM">0</span>
+                    </div>
+                </div>
+                <div class="overlap-card">
+                    <h4><span class="names">E & P</span></h4>
+                    <div class="overlap-percentage" id="overlapEP">0%</div>
+                    <div class="overlap-bar"><div class="overlap-bar-fill" id="barEP"></div></div>
+                    <div class="overlap-stat">
+                        <span class="label">Songs both rated 8+:</span>
+                        <span class="value" id="countEP">0</span>
+                    </div>
+                    <div class="overlap-stat">
+                        <span class="label">Total eligible songs:</span>
+                        <span class="value" id="totalEP">0</span>
+                    </div>
+                </div>
+                <div class="overlap-card">
+                    <h4><span class="names">M & P</span></h4>
+                    <div class="overlap-percentage" id="overlapMP">0%</div>
+                    <div class="overlap-bar"><div class="overlap-bar-fill" id="barMP"></div></div>
+                    <div class="overlap-stat">
+                        <span class="label">Songs both rated 8+:</span>
+                        <span class="value" id="countMP">0</span>
+                    </div>
+                    <div class="overlap-stat">
+                        <span class="label">Total eligible songs:</span>
+                        <span class="value" id="totalMP">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div id="loadingMessage">
             <div class="spinner"></div>
@@ -569,6 +720,67 @@
             document.getElementById('avgM').textContent = avgM;
             document.getElementById('avgP').textContent = avgP;
             document.getElementById('avgSum').textContent = avgSum;
+
+            // Update overlap statistics
+            updateOverlapStats(songs);
+        }
+
+        // Calculate and update overlap statistics
+        function updateOverlapStats(songs) {
+            // Calculate overlap between E & M
+            const overlapEM = calculateOverlap(songs, 'E', 'M');
+            updateOverlapUI('EM', overlapEM);
+
+            // Calculate overlap between E & P
+            const overlapEP = calculateOverlap(songs, 'E', 'P');
+            updateOverlapUI('EP', overlapEP);
+
+            // Calculate overlap between M & P
+            const overlapMP = calculateOverlap(songs, 'M', 'P');
+            updateOverlapUI('MP', overlapMP);
+        }
+
+        // Calculate overlap between two people
+        function calculateOverlap(songs, person1, person2) {
+            // Find songs where at least one person rated 8+
+            const eligibleSongs = songs.filter(song => {
+                const rating1 = song[person1];
+                const rating2 = song[person2];
+                return (rating1 !== null && rating1 >= 8) || (rating2 !== null && rating2 >= 8);
+            });
+
+            // Count songs where both rated 8+
+            const bothHigh = eligibleSongs.filter(song => {
+                const rating1 = song[person1];
+                const rating2 = song[person2];
+                return rating1 !== null && rating1 >= 8 && rating2 !== null && rating2 >= 8;
+            });
+
+            const percentage = eligibleSongs.length > 0 
+                ? ((bothHigh.length / eligibleSongs.length) * 100).toFixed(1)
+                : 0;
+
+            return {
+                count: bothHigh.length,
+                total: eligibleSongs.length,
+                percentage: percentage
+            };
+        }
+
+        // Update overlap UI elements
+        function updateOverlapUI(pair, data) {
+            document.getElementById(`overlap${pair}`).textContent = `${data.percentage}%`;
+            document.getElementById(`count${pair}`).textContent = data.count;
+            document.getElementById(`total${pair}`).textContent = data.total;
+            document.getElementById(`bar${pair}`).style.width = `${data.percentage}%`;
+        }
+
+        // Toggle overlap section
+        function toggleOverlap() {
+            const content = document.getElementById('overlapContent');
+            const toggle = document.getElementById('overlapToggle');
+            content.classList.toggle('hidden');
+            toggle.classList.toggle('collapsed');
         }
 
         function calculateAverage(values) {
