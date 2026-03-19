@@ -33,3 +33,4 @@ Rules:
 - If someone hasn't rated yet, use null
 - Continue ID numbering from the last song in songs.json
 - Date format is DD/MM/YYYY (extract from timestamps like [04/12/2025, 16:26:02])
+- If there is any ambiguity about which score a person gave for a particular song (e.g. multiple numbers, corrections, or unclear attribution), ask before proceeding
