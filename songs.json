@@ -2321,6 +2321,114 @@
        "E": 10,
        "M": 9,
        "P": 7.5
+     },
+     {
+       "id": 259,
+       "date": "17/04/2026",
+       "link": "https://youtu.be/qrQ65x1D8mE",
+       "submitter": "P",
+       "E": 6.8,
+       "M": 6.2,
+       "P": 10
+     },
+     {
+       "id": 260,
+       "date": "19/04/2026",
+       "link": "https://youtu.be/M-oySdv-R24",
+       "submitter": "M",
+       "E": 6.8,
+       "M": 10,
+       "P": 5.7
+     },
+     {
+       "id": 261,
+       "date": "20/04/2026",
+       "link": "https://youtu.be/8UVNT4wvIGY",
+       "submitter": "E",
+       "E": 10,
+       "M": 8,
+       "P": 7.8
+     },
+     {
+       "id": 262,
+       "date": "21/04/2026",
+       "link": "https://youtu.be/DrQRS40OKNE",
+       "submitter": "P",
+       "E": 6.5,
+       "M": 6.5,
+       "P": 10
+     },
+     {
+       "id": 263,
+       "date": "22/04/2026",
+       "link": "https://youtu.be/mHjuYDloDtE",
+       "submitter": "M",
+       "E": 6.8,
+       "M": 10,
+       "P": 6.9
+     },
+     {
+       "id": 264,
+       "date": "25/04/2026",
+       "link": "https://youtu.be/K5KAc5CoCuk",
+       "submitter": "E",
+       "E": 10,
+       "M": 5.5,
+       "P": 5
+     },
+     {
+       "id": 265,
+       "date": "27/04/2026",
+       "link": "https://youtu.be/nEPGVIYPH2U",
+       "submitter": "P",
+       "E": 4,
+       "M": 5,
+       "P": 10
+     },
+     {
+       "id": 266,
+       "date": "28/04/2026",
+       "link": "https://youtu.be/uxcWPDOSyE4",
+       "submitter": "M",
+       "E": 7,
+       "M": 10,
+       "P": 8.3
+     },
+     {
+       "id": 267,
+       "date": "30/04/2026",
+       "link": "https://youtu.be/-WNo6YdN8u0",
+       "submitter": "E",
+       "E": 10,
+       "M": 8.2,
+       "P": 7
+     },
+     {
+       "id": 268,
+       "date": "05/05/2026",
+       "link": "https://youtu.be/GP6a-7MP91g",
+       "submitter": "P",
+       "E": 5,
+       "M": 2,
+       "P": 10
+     },
+     {
+       "id": 269,
+       "date": "07/05/2026",
+       "link": "https://youtu.be/9wxI4KK9ZYo",
+       "submitter": "M",
+       "E": 8,
+       "M": 10,
+       "P": 8
+     },
+     {
+       "id": 270,
+       "date": "08/05/2026",
+       "link": "https://youtu.be/yFTvbcNhEgc",
+       "submitter": "E",
+       "E": 10,
+       "M": 6.5,
+       "P": 6.2
      }
   ]
 }
