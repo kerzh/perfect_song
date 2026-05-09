@@ -542,7 +542,7 @@
         // Calculate sum of ratings
         function calculateSum(song) {
             const ratings = [song.E, song.M, song.P].filter(r => r !== null && r !== undefined);
-            return ratings.reduce((sum, rating) => sum + rating, 0);
+            return Math.round(ratings.reduce((sum, rating) => sum + rating, 0) * 10) / 10;
         }
 
         // Check if song has both M and P ratings >= 8
