@@ -537,7 +537,29 @@
         let allSongs = [];
         let songsWithTitles = [];
         let currentSort = { column: 'id', direction: 'desc' };
-        const titleCache = {};
+
+        // Title cache persisted in localStorage so titles don't re-fetch on every
+        // page load. After the first visit only new/uncached songs hit the network.
+        const TITLE_CACHE_KEY = 'perfectSongTitleCache';
+        let titleCache = {};
+        try {
+            titleCache = JSON.parse(localStorage.getItem(TITLE_CACHE_KEY)) || {};
+        } catch (e) {
+            titleCache = {};
+        }
+
+        // Persist successful titles (skip nulls so failed lookups retry next load)
+        function saveTitleCache() {
+            try {
+                const clean = {};
+                for (const key in titleCache) {
+                    if (titleCache[key]) clean[key] = titleCache[key];
+                }
+                localStorage.setItem(TITLE_CACHE_KEY, JSON.stringify(clean));
+            } catch (e) {
+                // Ignore storage errors (quota exceeded, private mode, etc.)
+            }
+        }
 
         // Calculate sum of ratings
         function calculateSum(song) {
@@ -591,18 +613,20 @@
             }
         }
 
-        // Fetch titles in batches for better performance
+        // Fetch titles in batches for better performance. Songs whose title is
+        // already known (from the localStorage cache) are skipped entirely.
         async function fetchTitlesInBatches(songs, batchSize = 10) {
-            for (let i = 0; i < songs.length; i += batchSize) {
-                const batch = songs.slice(i, i + batchSize);
-                
+            const toFetch = songs.filter(song => !song.title);
+            for (let i = 0; i < toFetch.length; i += batchSize) {
+                const batch = toFetch.slice(i, i + batchSize);
+
                 // Process batch in parallel
                 await Promise.all(batch.map(async (song) => {
                     if (song.link.includes('youtube') || song.link.includes('youtu.be')) {
                         const title = await fetchVideoTitle(song.link);
                         song.title = title;
                         song.titleLoading = false;
-                        
+
                         // Update the specific row
                         updateSongRow(song);
                     } else {
@@ -612,9 +636,12 @@
                         updateSongRow(song);
                     }
                 }));
-                
+
+                // Persist newly fetched titles after each batch
+                saveTitleCache();
+
                 // Small delay between batches to be respectful to the API
-                if (i + batchSize < songs.length) {
+                if (i + batchSize < toFetch.length) {
                     await new Promise(resolve => setTimeout(resolve, 200));
                 }
             }
@@ -837,7 +864,15 @@
             try {
                 const response = await fetch('songs.json');
                 const data = await response.json();
-                allSongs = data.songs.map(song => ({ ...song, titleLoading: true }));
+                allSongs = data.songs.map(song => {
+                    // Use the cached title immediately when we have one so the
+                    // row paints with its title instead of a loading spinner.
+                    const cached = titleCache[song.link];
+                    if (cached) {
+                        return { ...song, title: cached, titleLoading: false };
+                    }
+                    return { ...song, titleLoading: true };
+                });
                 songsWithTitles = [...allSongs];
 
                 // Detect duplicates
