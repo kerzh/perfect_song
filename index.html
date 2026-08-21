@@ -865,11 +865,11 @@
                 const response = await fetch('songs.json');
                 const data = await response.json();
                 allSongs = data.songs.map(song => {
-                    // Use the cached title immediately when we have one so the
-                    // row paints with its title instead of a loading spinner.
-                    const cached = titleCache[song.link];
-                    if (cached) {
-                        return { ...song, title: cached, titleLoading: false };
+                    // A title stored in songs.json wins over a fetched one: it is there
+                    // because the uploader gave the video a useless title, or it is gone.
+                    const known = song.title || titleCache[song.link];
+                    if (known) {
+                        return { ...song, title: known, titleLoading: false };
                     }
                     return { ...song, titleLoading: true };
                 });
